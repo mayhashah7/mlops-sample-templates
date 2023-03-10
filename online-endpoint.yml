@@ -1,0 +1,24 @@
+steps:
+  - task: AzureCLI@2
+    displayName: Deploy and Configure Online Endpoint
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        endpoint_list=$(az ml online-endpoint list)
+        match_found=false
+        for obj in $(echo $endpoint_list | tr '\n' ' ' | sed 's/\[{/\n\[{/g' | sed 's/}\]/}\]\n/g'); do
+          name=$(echo "${obj}" | grep -o '"name": "[^"]*"' | cut -d'"' -f4)
+          if [[ "${name}" == $(endpointName) ]]; then
+            match_found=true
+            break
+          fi
+        done
+        if "${match_found}"; then
+          az ml online-endpoint update --name $(endpointName)
+          az ml online-deployment update --file "$(System.DefaultWorkingDirectory)/online-deployment.yml" --endpoint-name $(endpointName) --name $(deploymentName) --all-traffic
+        else
+          az ml online-endpoint create --name $(endpointName)
+          az ml online-deployment create --file "$(System.DefaultWorkingDirectory)/online-deployment.yml" --endpoint-name $(endpointName) --name $(deploymentName) --all-traffic
+        fi

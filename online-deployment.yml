@@ -1,0 +1,12 @@
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
+name: none
+endpoint_name: none
+model: azureml:INSERT-YOUR-MODEL-NAME-HERE@latest
+code_configuration:
+  code: ../train/
+  scoring_script: score.py
+environment:
+  conda_file: conda.yml
+  image: mcr.microsoft.com/azureml/minimal-ubuntu20.04-py38-cpu-inference:latest
+instance_type: Standard_E16s_v3
+instance_count: 1

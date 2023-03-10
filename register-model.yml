@@ -1,0 +1,13 @@
+steps:
+  - task: AzureCLI@2
+    displayName: Register Model to Workspace
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        export jobName=$(az ml job list -p $(runId) --query "[?display_name=='train_model'].{stepName:name}[0].stepName" | tr -d '"')
+        az ml model create --name $(model) --type "custom_model" --path azureml://jobs/$jobName/outputs/<output-name>/paths/<path-to-model-relative-to-the-named-output-location>
+
+# More information on the model path can be found here (https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-models?tabs=cli%2Cuse-job-output#supported-paths)
+        

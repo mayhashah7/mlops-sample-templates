@@ -1,0 +1,9 @@
+steps:
+  - task: AzureCLI@2
+    displayName: Register Azure ML environment (conda)
+    inputs: 
+      azureSubscription: $(serviceConnection)
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az ml environment create --name $(condaEnv) --file "$(System.DefaultWorkingDirectory)/environment.yml" --conda-file "$(System.DefaultWorkingDirectory)/conda.yml"

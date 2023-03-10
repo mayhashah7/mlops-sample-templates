@@ -1,0 +1,31 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+description: Training Pipeline Outline
+
+inputs:
+  train:
+    type: uri_file
+    path: 
+
+outputs: 
+  trained_model:
+
+settings:
+  default_datastore: azureml:
+  default_compute: azureml:
+  continue_on_step_failure: false
+
+jobs:
+   train_model:
+    name: train_model
+    display_name: train-model
+    code: 
+    command: >-
+
+    environment: azureml:enviornment-demo@latest
+    inputs:
+      train: ${{parent.inputs.train}}
+    outputs:
+      trained_model: 
+        type: custom_model
+  

@@ -1,0 +1,50 @@
+# Note this example assumes that the Azure Machine Learning workspace and supporting resources have already been deployed
+
+variables:
+  - name: agentPool
+    value: An example of all Microsoft Hosted Agents can be found here (https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml). If using an ML Workspace behind private endpoint you will need to use a Self Hosted agent.
+  - name: serviceConnection
+    value: The steps to create an Azure DevOps service connection can be found here (https://learn.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml)
+  - name: mlWorkspace
+    value: This value would be the name of the Azure Machine Learning workspace that you would like to use for your model and endpoint deployment.
+  - name: resourceGroup
+    value: This would be the name of the resource group the Azure Machine Learning workspace is deployed in.
+  - name: location
+    value: This would be the location where the Azure Machine Learning workspace is deployed.
+  - name: condaEnv
+    value: This would be the name of the custom enviornment you are creating using your conda file and base image.
+  - name: pipeline_file
+    value: This would be the full file path to your Azure Machine Learning pipeline training file. The file path woud start at the head of your repository.
+  - name: experimentName
+    value: This would be the name of your training pipeline experiment.
+  - name: enable_monitoring
+    value: Either true or false depending on whether you would like to enable monitoring for your training jobs.
+  - name: model
+    value: This would be the name you would like to use for the model you register to the workspace
+  - name: endpointName
+    value: This would be the name of the real time endpoint you want to deploy
+  - name: deploymentName
+    value: This would be the name of the deployment associated to the real time endpoint. Note in this example we will set all traffic to the newest deployment to an endpoint.
+
+trigger:
+- main
+
+pool: $(agentPool)
+
+stages:
+- stage: DeployTrainingPipeline
+  displayName: Deploy Training Pipeline
+  jobs:
+    - job: DeployTrainingPipeline
+      steps:
+      - template: install-aml-cli.yml
+      - template: connect-to-workspace.yml
+      - template: register-environment.yml
+      - template: run-pipeline.yml
+        parameters: 
+          pipeline_file: $(pipeline_file)
+          experiment_name: $(experimentName)_$(Build.SourceBranchName)
+          display_name: $(experimentName)_$(Build.BuildID)
+          runId: $(runId)
+      - template: register-model.yml
+      - template: online-endpoint.yml
