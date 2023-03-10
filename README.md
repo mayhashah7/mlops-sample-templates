@@ -32,5 +32,5 @@ This template access the model created in our prevous training job and registers
 
 ## online-endpoint.yml
 
-This template will either create a new online endpoint or update an existing endpoint depending on whether the workspace already has an endpoint with the same name provided by the variable in the `mlops-demo.yml`. An important note is in this example we will set all traffic to the newest deployment to an endpoint. Within our `online-deployment.yml` we would need to change the model name to match that model name you passed as the variable value in the `mlops-demo.yml`, we would need to update the path code_dcinfigur to your scoring file (depending on how your file heirarchy is set up)
+This template will either create a new online endpoint or update an existing endpoint depending on whether the workspace already has an endpoint with the same name provided by the variable in the `mlops-demo.yml`. An important note is in this example we will set all traffic to the newest deployment to an endpoint. Within our `online-deployment.yml` we would need to change the model name to match that model name you passed as the variable value in the `mlops-demo.yml`, we would need to update the path under code_configuration to match the path to your scoring file (depending on how your file heirarchy is set up)
 
