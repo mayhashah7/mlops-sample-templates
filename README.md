@@ -24,4 +24,4 @@ This template leverages our `conda.yml` and `environment.yml` to create a custom
 
 ## run-pipeline.yml
 
-This template kicks off the training job that you would fill in the details for within `train.yml`
+This template kicks off the training job that you would fill in the details for within `train.yml`. The training pipeline can be expanded to include a data import step and an evaluation step. To run this step we would pass in our `pipeline_file` path and an experiment name. Our training job will also update the `run_id` variable
