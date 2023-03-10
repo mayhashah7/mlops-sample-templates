@@ -24,4 +24,13 @@ This template leverages our `conda.yml` and `environment.yml` to create a custom
 
 ## run-pipeline.yml
 
-This template kicks off the training job that you would fill in the details for within `train.yml`. The training pipeline can be expanded to include a data import step and an evaluation step. To run this step we would pass in our `pipeline_file` path and an experiment name. Our training job will also update the `run_id` variable
+This template kicks off the training job that you would fill in the details for within `train.yml`. The training pipeline can be expanded to include a data import step and an evaluation step. To run this step we would pass in our `pipeline_file` path and an experiment name. Our training job will also update the `run_id` variable that will be used in our next step to register the model to our workspace. More information on creating training pipelines can be found here (https://learn.microsoft.com/en-us/azure/machine-learning/how-to-create-component-pipelines-cli).
+
+## register-model.yml
+
+This template access the model created in our prevous training job and registers it to our workspace. This yml template leveragtes the model name we provided in the `mlops-demo.yml`. Within the `az ml model create` command we would need to edit the model path to refect how we outputted our model in the training job. 
+
+## online-endpoint.yml
+
+This template will either create a new online endpoint or update an existing endpoint depending on whether the workspace already has an endpoint with the same name provided by the variable in the `mlops-demo.yml`. An important note is in this example we will set all traffic to the newest deployment to an endpoint. Within our `online-deployment.yml` we would need to change the model name to match that model name you passed as the variable value in the `mlops-demo.yml`, we would need to update the path code_dcinfigur to your scoring file (depending on how your file heirarchy is set up)
+
